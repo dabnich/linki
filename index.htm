@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<style>
+.type{
+	//display: inline-block;
+	background: black;
+	color: white;
+	border-bottom: solid 1px black;
+	font-size: 20px;
+	text-align: center;
+}
+
+.descr{
+	color: red;
+	display: block;
+}
+
+.block{
+	//display: inline-block;
+	display: block;
+	background: #1e1e1e;
+	color: #fff;
+	padding: 5px;
+	border-radius: 8px;
+	margin: 5px 15px;
+	text-align: center;
+	justify-content: center;
+	//height: content;
+}
+
+.grid-container {
+  border: solid 1px blue;
+  width: fit-content;
+  height: fit-content;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#sat-grid{
+	background: linear-gradient(to right, rgb(0,100,255), rgb(0,200,0));
+}
+
+#obs-grid{
+	
+}
+
+#images{
+	margin: 20px;
+}
+
+</style>
+</HEAD>
+<BODY>
+<script>
+function openLink(adres){
+	window.open(adres, "_blank");
+}
+</script>
+<div style="display: block;">
+<div class="grid-container" id="sat-grid">
+	<div class="type">SATELITA</div>
+	<div class="block" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
+	<div class="block" onclick="openLink('https://meteologix.com/pl/satellite/top-alert-15min.html')">cloud tops alert<span class="descr">meteologix</span></div>
+	<div class="block" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euRadarSatDay')">chmury i radar<span class="descr">SAT24</span></div>
+	<div class="block" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euInfraDay')">podczerwień<span class="descr">SAT24</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=mtg-dn-setvak')">wzmocniona podczerwień<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=clouds-with-background-day')">prosta podczerwień<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://www.meteoblue.com/en/weather/maps/gdynia_poland_3099424#coords=5.29/52.363/19.904&map=satellite~radar~none~none~none')">mapa dynamiczna+radar<span class="descr">meteoblue</span></div>
+</div>
+<div class="grid-container" id="obs-grid">
+	<div class="type">OBSERWACJE</div>
+	<div class="block" onclick="openLink('https://www.wunderground.com/dashboard/pws/IGDYNI8')">stacja Gdynia Dąbrowa<span class="descr">Weather Underground</span></div>
+	<div class="block" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop/station/gdansk')">stacja Gdańsk Świbno<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://metar-taf.com/metar/EPGD')">stacja lotnisko EPGD<span class="descr">METAR</span></div>
+	<div class="block" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop')">surowe dane wszystkie stacje<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=TEMPERATURA')">temperatura<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=CISNIENIE')">ciśnienie<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://meteologix.com/pl/observations/pomeranian/pressure-qff.html')">ciśnienie<span class="descr">meteologix</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=WIATR')">wiatr<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=GRS&param=GRS_10')">opad 10min.<span class="descr">IMGW</span></div>
+	<div class="block" onclick="openLink('https://www.windy.com/pl/-Radar-pogodowy-radar?radar,53.416,17.591,7,p:temp')">radar<span class="descr">windy</span></div>
+</div>
+</div>
+<br>
+<div id="images">
+<img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
+<iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
+</div>
+</BODY>
+</HTML>
