@@ -11,16 +11,24 @@
 }
 
 .descr{
-	color: red;
+	color: white;
 	display: block;
+	font-size: 10px;
+}
+
+#menu{
+	display: block; 
+	background: url('chmury.jpg');
+	background-size: 100%;
 }
 
 .block{
 	//display: inline-block;
-	display: block;
-	background: #1e1e1e;
+	//display: block;
+	background-image: radial-gradient(rgb(0,100,120), rgb(0,0,40));
 	color: #fff;
 	padding: 5px;
+	border: outset 1px white;
 	border-radius: 8px;
 	margin: 5px 15px;
 	text-align: center;
@@ -34,14 +42,20 @@
   height: fit-content;
   display: inline-block;
   vertical-align: top;
+  margin-right: 20px;
 }
 
 #sat-grid{
-	background: linear-gradient(to right, rgb(0,100,255), rgb(0,200,0));
+	//background: linear-gradient(to top, rgb(0,100,255), rgb(0,200,0));
+	background: url("ziemia.png");
+	background-size: 400px 600px;
 }
 
 #obs-grid{
-	
+	//background: linear-gradient(to top, rgb(0,0,120), rgb(20,20,255));
+	background: url("ziemia2.png");
+	background-size: 400px 700px;
+	background-position: 50%;
 }
 
 #images{
@@ -56,7 +70,8 @@ function openLink(adres){
 	window.open(adres, "_blank");
 }
 </script>
-<div style="display: block;">
+<h2>MD: moje linki i dane pogodowe</h2>
+<div id="menu">
 <div class="grid-container" id="sat-grid">
 	<div class="type">SATELITA</div>
 	<div class="block" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
