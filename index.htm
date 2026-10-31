@@ -1,8 +1,7 @@
 <HTML>
 <HEAD>
 <style>
-.type{
-	//display: inline-block;
+.link-type{
 	background: black;
 	color: white;
 	border-bottom: solid 1px black;
@@ -18,13 +17,14 @@
 
 #menu{
 	display: block; 
-	background: url('chmury.jpg');
-	background-size: 100%;
+	//background: url('chmury.jpg');
+	//background-size: 100%;
 }
 
-.block{
+.block-sat, .block-obs{
 	//display: inline-block;
 	//display: block;
+	display: none;
 	background-image: radial-gradient(rgb(0,100,120), rgb(0,0,40));
 	color: #fff;
 	padding: 5px;
@@ -37,12 +37,22 @@
 }
 
 .grid-container {
-  border: solid 1px blue;
+	border: solid 1px blue;
+	//width: fit-content;
+	width: 200px;
+	height: fit-content;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 20px;
+}
+.title-menu{
   width: fit-content;
   height: fit-content;
   display: inline-block;
   vertical-align: top;
   margin-right: 20px;
+  font-weight: bold;
+	font-size: 20px;
 }
 
 #sat-grid{
@@ -65,41 +75,156 @@
 </style>
 </HEAD>
 <BODY>
+
+<h2>MD: moje linki i dane pogodowe</h2>
+<div id="menu">
+<div class="title-menu">linki</div>
+<div class="grid-container" id="sat-grid">
+	<div class="link-type" onclick="clickSatMenu()">SATELITA</div>
+	<div class="block-sat" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
+	<div class="block-sat" onclick="openLink('https://meteologix.com/pl/satellite/top-alert-15min.html')">cloud tops alert<span class="descr">meteologix</span></div>
+	<div class="block-sat" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euRadarSatDay')">chmury i radar<span class="descr">SAT24</span></div>
+	<div class="block-sat" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euInfraDay')">podczerwień<span class="descr">SAT24</span></div>
+	<div class="block-sat" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=mtg-dn-setvak')">wzmocniona podczerwień<span class="descr">IMGW</span></div>
+	<div class="block-sat" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=clouds-with-background-day')">prosta podczerwień<span class="descr">IMGW</span></div>
+	<div class="block-sat" onclick="openLink('https://www.meteoblue.com/en/weather/maps/gdynia_poland_3099424#coords=5.29/52.363/19.904&map=satellite~radar~none~none~none')">mapa dynamiczna+radar<span class="descr">meteoblue</span></div>
+</div>
+<div class="grid-container" id="obs-grid">
+	<div class="link-type" onclick="clickObsMenu()">OBSERWACJE</div>
+	<div class="block-obs" onclick="openLink('https://www.wunderground.com/dashboard/pws/IGDYNI8')">stacja Gdynia Dąbrowa<span class="descr">Weather Underground</span></div>
+	<div class="block-obs" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop/station/gdansk')">stacja Gdańsk Świbno<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://metar-taf.com/metar/EPGD')">stacja lotnisko EPGD<span class="descr">METAR</span></div>
+	<div class="block-obs" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop')">surowe dane wszystkie stacje<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=TEMPERATURA')">temperatura<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=CISNIENIE')">ciśnienie<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://meteologix.com/pl/observations/pomeranian/pressure-qff.html')">ciśnienie<span class="descr">meteologix</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=WIATR')">wiatr<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=GRS&param=GRS_10')">opad 10min.<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://www.windy.com/pl/-Radar-pogodowy-radar?radar,53.416,17.591,7,p:temp')">radar<span class="descr">windy</span></div>
+</div>
+</div>
+<hr>
+<!-- TUTAJ BĘDZIE KOLEJNE MENU - MENU Z MAPAMI NP. WXCHARTS
+<div id="menu">
+<div class="title-menu">mapy</div>
+<div class="grid-container" id="sat-grid">
+	<div class="link-type" onclick="clickSatMenu()">SATELITA</div>
+	<div class="block-sat" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
+	<div class="block-sat" onclick="openLink('https://meteologix.com/pl/satellite/top-alert-15min.html')">cloud tops alert<span class="descr">meteologix</span></div>
+	<div class="block-sat" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euRadarSatDay')">chmury i radar<span class="descr">SAT24</span></div>
+	<div class="block-sat" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euInfraDay')">podczerwień<span class="descr">SAT24</span></div>
+	<div class="block-sat" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=mtg-dn-setvak')">wzmocniona podczerwień<span class="descr">IMGW</span></div>
+	<div class="block-sat" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=clouds-with-background-day')">prosta podczerwień<span class="descr">IMGW</span></div>
+	<div class="block-sat" onclick="openLink('https://www.meteoblue.com/en/weather/maps/gdynia_poland_3099424#coords=5.29/52.363/19.904&map=satellite~radar~none~none~none')">mapa dynamiczna+radar<span class="descr">meteoblue</span></div>
+</div>
+<div class="grid-container" id="obs-grid">
+	<div class="link-type" onclick="clickObsMenu()">OBSERWACJE</div>
+	<div class="block-obs" onclick="openLink('https://www.wunderground.com/dashboard/pws/IGDYNI8')">stacja Gdynia Dąbrowa<span class="descr">Weather Underground</span></div>
+	<div class="block-obs" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop/station/gdansk')">stacja Gdańsk Świbno<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://metar-taf.com/metar/EPGD')">stacja lotnisko EPGD<span class="descr">METAR</span></div>
+	<div class="block-obs" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop')">surowe dane wszystkie stacje<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=TEMPERATURA')">temperatura<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=CISNIENIE')">ciśnienie<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://meteologix.com/pl/observations/pomeranian/pressure-qff.html')">ciśnienie<span class="descr">meteologix</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=WIATR')">wiatr<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://cmm.imgw.pl/pomiary?category=GRS&param=GRS_10')">opad 10min.<span class="descr">IMGW</span></div>
+	<div class="block-obs" onclick="openLink('https://www.windy.com/pl/-Radar-pogodowy-radar?radar,53.416,17.591,7,p:temp')">radar<span class="descr">windy</span></div>
+</div>
+</div>
+!-->
+<br>
+<div id="images">
+<!--
+<img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
+<iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
+!-->
+
+</div>
 <script>
 function openLink(adres){
 	window.open(adres, "_blank");
 }
+function clickSatMenu(){
+	satElem = document.getElementsByClassName("block-sat");
+	var display = "block";
+	if(satElem[0].style.display=="block") display = "none";
+	for(var i=0; i<satElem.length; i++){
+		satElem[i].style.display = display;
+	}
+}
+function clickObsMenu(){
+	obsElem = document.getElementsByClassName("block-obs");
+	var display = "block";
+	if(obsElem[0].style.display=="block") display = "none";
+	for(var i=0; i<obsElem.length; i++){
+		obsElem[i].style.display = display;
+	}	
+}
+
+forecastInterval = 6;
+const d = new Date();
+let hour = d.getUTCHours();
+var d_runForecast = new Date(d.getTime());
+d_runForecast.setUTCHours(d_runForecast.getUTCHours()-4);
+
+for(var i=18; i>=0; i-=forecastInterval){
+	if(i<=d_runForecast.getUTCHours()){
+		d_runForecast.setUTCHours(i);
+		break;
+	}
+}
+d_runForecast.setUTCMinutes(0);
+d_runForecast.setUTCSeconds(0);
+var str_runForecast = d_runForecast.toISOString().replace(/\.\d{3}Z$/, 'Z');
+d.setUTCMinutes(0);
+d.setUTCSeconds(0);
+//alert(str_runForecast);
+d.setUTCMinutes(0);
+d.setUTCSeconds(0);
+var str_forecast = d.toISOString().replace(/\.\d{3}Z$/, 'Z');
+var rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast;
+var imagesElem = document.getElementById("images");
+var imgElem = document.createElement("img");
+imgElem.src = rawImgUrl;
+//imgElem.style.maxWidth = "100%";
+imagesElem.appendChild(imgElem);
+/*
+document.body.innerHTML += "<a href='"+rawImgUrl+"'>link</a>";
+document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
+
+
+// Używamy darmowego proxy do obejścia blokad CORS / Referer
+var proxyUrl = "https://api.cors.lol/?url=" + encodeURIComponent(rawImgUrl);
+
+var imgDiv = document.getElementById("images");
+
+fetch(proxyUrl)
+  .then(response => {
+    if (!response.ok) throw new Error("Błąd sieciowy proxy");
+    return response.blob();
+  })
+  .then(imageBlob => {
+    // Tworzymy lokalny adres URL w pamięci przeglądarki dla pobranego obrazka
+    var objectURL = URL.createObjectURL(imageBlob);
+    
+    // Czyścimy zawartość diva przed dodaniem nowego obrazka
+    imgDiv.innerHTML = "";
+    
+    var imgElem = document.createElement("img");
+    imgElem.src = objectURL;
+    imgElem.style.maxWidth = "100%"; // żeby ładnie się skalował
+    
+    imgDiv.appendChild(imgElem);
+  })
+  .catch(err => {
+    console.error("Nadal błąd:", err);
+    //imgDiv.innerText = "Nie udało się pobrać mapy z WXCharts.";
+  });
+*/
+	
+//https://www.wxcharts.com/api/content/icon-eu/poland/overview/2026-10-30T12:00:00Z/2026-10-31T00:00:00Z
+
+
 </script>
-<h2>MD: moje linki i dane pogodowe</h2>
-<div id="menu">
-<div class="grid-container" id="sat-grid">
-	<div class="type">SATELITA</div>
-	<div class="block" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
-	<div class="block" onclick="openLink('https://meteologix.com/pl/satellite/top-alert-15min.html')">cloud tops alert<span class="descr">meteologix</span></div>
-	<div class="block" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euRadarSatDay')">chmury i radar<span class="descr">SAT24</span></div>
-	<div class="block" onclick="openLink('https://www.sat24.com/pl-pl/country/pl#selectedLayer=euInfraDay')">podczerwień<span class="descr">SAT24</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=mtg-dn-setvak')">wzmocniona podczerwień<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SAT&param=clouds-with-background-day')">prosta podczerwień<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://www.meteoblue.com/en/weather/maps/gdynia_poland_3099424#coords=5.29/52.363/19.904&map=satellite~radar~none~none~none')">mapa dynamiczna+radar<span class="descr">meteoblue</span></div>
-</div>
-<div class="grid-container" id="obs-grid">
-	<div class="type">OBSERWACJE</div>
-	<div class="block" onclick="openLink('https://www.wunderground.com/dashboard/pws/IGDYNI8')">stacja Gdynia Dąbrowa<span class="descr">Weather Underground</span></div>
-	<div class="block" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop/station/gdansk')">stacja Gdańsk Świbno<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://metar-taf.com/metar/EPGD')">stacja lotnisko EPGD<span class="descr">METAR</span></div>
-	<div class="block" onclick="openLink('https://danepubliczne.imgw.pl/api/data/synop')">surowe dane wszystkie stacje<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=TEMPERATURA')">temperatura<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=CISNIENIE')">ciśnienie<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://meteologix.com/pl/observations/pomeranian/pressure-qff.html')">ciśnienie<span class="descr">meteologix</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=SYNOP&param=WIATR')">wiatr<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://cmm.imgw.pl/pomiary?category=GRS&param=GRS_10')">opad 10min.<span class="descr">IMGW</span></div>
-	<div class="block" onclick="openLink('https://www.windy.com/pl/-Radar-pogodowy-radar?radar,53.416,17.591,7,p:temp')">radar<span class="descr">windy</span></div>
-</div>
-</div>
-<br>
-<div id="images">
-<img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
-<iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
-</div>
 </BODY>
 </HTML>
