@@ -197,8 +197,8 @@ document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
 
 // Używamy darmowego proxy do obejścia blokad CORS / Referer
 //var proxyUrl = "https://api.cors.lol/?url=" + encodeURIComponent(rawImgUrl); nie dziala
-var proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawImgUrl);
-//var proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(rawImgUrl);
+//var proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawImgUrl);
+var proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(rawImgUrl);
 
 var imgDiv = document.getElementById("images");
 
