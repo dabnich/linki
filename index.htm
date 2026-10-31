@@ -141,6 +141,7 @@
 !-->
 
 </div>
+<div id="frame"></div>
 <script>
 function openLink(adres){
 	window.open(adres, "_blank");
@@ -191,7 +192,7 @@ imgElem.referrerPolicy = "no-referrer"; // <-- KLUCZOWA LINIJKA
 imgElem.src = rawImgUrl;
 imgElem.style.maxWidth = "100%";
 imagesElem.appendChild(imgElem);
-
+document.getElementById("frame").innerHTML = '<iframe src="https://www.wxcharts.com/" width="100%" height="600px" style="border:none;"></iframe>';
 /*
 document.body.innerHTML += "<a href='"+rawImgUrl+"'>link</a>";
 document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
