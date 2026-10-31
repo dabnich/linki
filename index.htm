@@ -11,7 +11,7 @@
 }
 
 .descr{
-	color: white;
+	color: red;
 	display: block;
 	font-size: 10px;
 }
@@ -73,6 +73,46 @@
 	margin: 20px;
 }
 
+#tabela-wx {
+  display: grid;
+  grid-template-columns: repeat(10, max-content);
+  width: fit-content;
+  gap: 10px;
+}
+
+/*
+.wiersz > *:first-child{
+	grid-column-start: 1;
+}
+*/
+
+.wiersz > .komorka:first-child,
+.wiersz > .komorka-title:first-child
+{
+	grid-column-start: 1;
+}
+
+.wiersz {
+	display: contents;
+}
+
+.komorka {
+	padding: 10px;
+	border: 1px solid #ccc;
+	//margin: 10px; //uzyte gap: 10px w .tabela
+}
+
+.komorka-title{
+	padding: 10px;
+	font-weight: bold;
+}
+
+#modelinfo{
+	font-size: 12px;
+	margin: 10px;
+}
+
+
 </style>
 </HEAD>
 <BODY>
@@ -105,9 +145,9 @@
 </div>
 </div>
 <hr>
-<!-- TUTAJ BĘDZIE KOLEJNE MENU - MENU Z MAPAMI NP. WXCHARTS
+<!--
 <div id="menu">
-<div class="title-menu">mapy</div>
+<div class="title-menu">wxcharts<span class="descr">meteologix</span></div>
 <div class="grid-container" id="sat-grid">
 	<div class="link-type" onclick="clickSatMenu()">SATELITA</div>
 	<div class="block-sat" onclick="openLink('https://meteologix.com/pl/satellite/satellite-nature-15min.html')">natural<span class="descr">meteologix</span></div>
@@ -132,7 +172,22 @@
 	<div class="block-obs" onclick="openLink('https://www.windy.com/pl/-Radar-pogodowy-radar?radar,53.416,17.591,7,p:temp')">radar<span class="descr">windy</span></div>
 </div>
 </div>
-!-->
+--!>
+<div id="modelinfo"></div>
+<div id="tabela-wx">
+  <div class="wiersz">
+    <div class="komorka-title">Polska</div>
+	<div class="komorka" id="k1"></div>
+    <div class="komorka" id="k2"></div>
+	<div class="komorka" id="k3"></div>
+  </div>
+  <div class="wiersz">
+	<div class="komorka-title">Europa</div>
+    <div class="komorka" id="k4"></div>
+    <div class="komorka" id="k5"></div>
+	<div class="komorka" id="k6"></div>
+  </div>
+</div>
 <br>
 <div id="images">
 <!--
@@ -184,14 +239,43 @@ d.setUTCSeconds(0);
 d.setUTCMinutes(0);
 d.setUTCSeconds(0);
 var str_forecast = d.toISOString().replace(/\.\d{3}Z$/, 'Z');
-var rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast;
 
+var tabWxElem = document.getElementById("modelinfo");
+tabWxElem.innerHTML += "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
+document.getElementById("k1").innerHTML += "obecnie opady/chmury";
+document.getElementById("k1").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast); };
+
+document.getElementById("k2").innerHTML += "obecnie ciśnienie/wiatr";
+document.getElementById("k2").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast); };
+
+document.getElementById("k3").innerHTML += "obecnie temperatura";
+document.getElementById("k3").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/2m_ttG-C/" + str_runForecast + "/" + str_forecast); };
+
+document.getElementById("k4").innerHTML += "obecnie opady/chmury";
+document.getElementById("k4").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/overview/" + str_runForecast + "/" + str_forecast); };
+
+document.getElementById("k5").innerHTML += "obecnie ciśnienie/wiatr";
+document.getElementById("k5").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/mslp/" + str_runForecast + "/" + str_forecast); };
+
+document.getElementById("k6").innerHTML += "obecnie temperatura";
+document.getElementById("k6").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/2m_ttG-C/" + str_runForecast + "/" + str_forecast); };
+
+//https://www.wxcharts.com/api/content/icon-eu/europe/overview/2026-10-31T00:00:00Z/2026-10-31T06:00:00Z
+/*
+document.getElementById("k1").innerHTML = "<a href='"+rawImgUrl+"'>obecnie opady/chmury Polska</a>";
+rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast;
+document.getElementById("k2").innerHTML = "<a href='"+rawImgUrl+"'>obecnie ciśnienie/wiatr Polska</a>";
+rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/2m_ttG-C/" + str_runForecast + "/" + str_forecast;
+document.getElementById("k3").innerHTML = "<a href='"+rawImgUrl+"'>obecnie temperatura Polska</a>";
+*/
+/*
 var imagesElem = document.getElementById("images");
 var imgElem = document.createElement("img");
 imgElem.referrerPolicy = "no-referrer"; // <-- KLUCZOWA LINIJKA
 imgElem.src = rawImgUrl;
 imgElem.style.maxWidth = "100%";
 imagesElem.appendChild(imgElem);
+*/
 //document.getElementById("frame").innerHTML = '<iframe src="https://www.wxcharts.com/" width="100%" height="600px" style="border:none;"></iframe>';
 //tez nie dziala
 /*
