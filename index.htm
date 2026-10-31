@@ -1,5 +1,6 @@
 <HTML>
 <HEAD>
+<meta name="referrer" content="no-referrer">	
 <style>
 .link-type{
 	background: black;
@@ -183,49 +184,19 @@ d.setUTCMinutes(0);
 d.setUTCSeconds(0);
 var str_forecast = d.toISOString().replace(/\.\d{3}Z$/, 'Z');
 var rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast;
-/*
+
 var imagesElem = document.getElementById("images");
 var imgElem = document.createElement("img");
+imgElem.referrerPolicy = "no-referrer"; // <-- KLUCZOWA LINIJKA
 imgElem.src = rawImgUrl;
 imgElem.style.maxWidth = "100%";
 imagesElem.appendChild(imgElem);
-*/
+
 /*
 document.body.innerHTML += "<a href='"+rawImgUrl+"'>link</a>";
 document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
 */
 
-// Używamy darmowego proxy do obejścia blokad CORS / Referer
-//var proxyUrl = "https://api.cors.lol/?url=" + encodeURIComponent(rawImgUrl); nie dziala
-//var proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawImgUrl);
-var proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(rawImgUrl);
-
-var imgDiv = document.getElementById("images");
-
-fetch(proxyUrl)
-  .then(response => {
-    if (!response.ok) throw new Error("Błąd sieciowy proxy");
-    return response.blob();
-  })
-  .then(imageBlob => {
-    // Tworzymy lokalny adres URL w pamięci przeglądarki dla pobranego obrazka
-    var objectURL = URL.createObjectURL(imageBlob);
-    
-    // Czyścimy zawartość diva przed dodaniem nowego obrazka
-    imgDiv.innerHTML = "";
-    
-    var imgElem = document.createElement("img");
-    imgElem.src = objectURL;
-    imgElem.style.maxWidth = "100%"; // żeby ładnie się skalował
-    
-    imgDiv.appendChild(imgElem);
-  })
-  .catch(err => {
-    console.error("Nadal błąd:", err);
-    //imgDiv.innerText = "Nie udało się pobrać mapy z WXCharts.";
-  });
-
-	
 //https://www.wxcharts.com/api/content/icon-eu/poland/overview/2026-10-30T12:00:00Z/2026-10-31T00:00:00Z
 
 
