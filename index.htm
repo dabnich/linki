@@ -317,7 +317,7 @@ async function getTodayRainfall() {
       }
     }
 	//document.getElementById('rain-value').innerText = "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
-    document.getElementById('rain-value').innerText += totalRain.toFixed(1);
+    document.getElementById('rain-value').innerText = totalRain.toFixed(1);
   } catch (error) {
     console.error('Błąd pobierania danych o opadach:', error);
     document.getElementById('rain-value').innerText += 'błąd';
