@@ -189,16 +189,18 @@
   </div>
 </div>
 <br>
+<div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
+  <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm <span id="rain-time" style="font-size: 12px;"></span>
+</div>
 <div id="images">
-<!--
+<img src="https://www.yr.no/en/content/54.474,%2018.482/meteogram.svg"/>
 <img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
+<!--
 <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
-!-->
+-->
 
 </div>
-<div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
-  <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm
-</div>
+
 <script>
 function openLink(adres){
 	window.open(adres, "_blank");
@@ -262,30 +264,7 @@ document.getElementById("k5").onclick = function(){ openLink("https://www.wxchar
 document.getElementById("k6").innerHTML += "obecnie temperatura";
 document.getElementById("k6").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/2m_ttG-C/" + str_runForecast + "/" + str_forecast); };
 
-//https://www.wxcharts.com/api/content/icon-eu/europe/overview/2026-10-31T00:00:00Z/2026-10-31T06:00:00Z
-/*
-document.getElementById("k1").innerHTML = "<a href='"+rawImgUrl+"'>obecnie opady/chmury Polska</a>";
-rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast;
-document.getElementById("k2").innerHTML = "<a href='"+rawImgUrl+"'>obecnie ciśnienie/wiatr Polska</a>";
-rawImgUrl = "https://www.wxcharts.com/api/content/icon-eu/poland/2m_ttG-C/" + str_runForecast + "/" + str_forecast;
-document.getElementById("k3").innerHTML = "<a href='"+rawImgUrl+"'>obecnie temperatura Polska</a>";
-*/
-/*
-var imagesElem = document.getElementById("images");
-var imgElem = document.createElement("img");
-imgElem.referrerPolicy = "no-referrer"; // <-- KLUCZOWA LINIJKA
-imgElem.src = rawImgUrl;
-imgElem.style.maxWidth = "100%";
-imagesElem.appendChild(imgElem);
-*/
-//document.getElementById("frame").innerHTML = '<iframe src="https://www.wxcharts.com/" width="100%" height="600px" style="border:none;"></iframe>';
-//tez nie dziala
-/*
-document.body.innerHTML += "<a href='"+rawImgUrl+"'>link</a>";
-document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
-*/
 
-//https://www.wxcharts.com/api/content/icon-eu/poland/overview/2026-10-30T12:00:00Z/2026-10-31T00:00:00Z
 
 async function getTodayRainfall() {
   const lat = 54.4743; // Szerokość geograficzna (Gdynia)
@@ -317,7 +296,8 @@ async function getTodayRainfall() {
       }
     }
 	//document.getElementById('rain-value').innerText = "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
-    document.getElementById('rain-value').innerText = totalRain.toFixed(1);
+    document.getElementById("rain-time").innerHTML = "<br>stan na godzinę: "+now.getHours()+":00<br>miasto: Gdynia";
+	document.getElementById('rain-value').innerText = totalRain.toFixed(1);
   } catch (error) {
     console.error('Błąd pobierania danych o opadach:', error);
     document.getElementById('rain-value').innerText += 'błąd';
