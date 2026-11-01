@@ -196,7 +196,9 @@
 !-->
 
 </div>
-<div id="frame"></div>
+<div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
+  <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm
+</div>
 <script>
 function openLink(adres){
 	window.open(adres, "_blank");
@@ -285,7 +287,45 @@ document.body.innerHTML += "<img src='"+rawImgUrl+"'/>";
 
 //https://www.wxcharts.com/api/content/icon-eu/poland/overview/2026-10-30T12:00:00Z/2026-10-31T00:00:00Z
 
+async function getTodayRainfall() {
+  const lat = 54.4743; // Szerokość geograficzna (Gdynia)
+  const lon = 18.4824; // Długość geograficzna
 
+  // Pobieramy dane z API (strefa czasowa auto dopasowuje godziny do lokalnego czasu)
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation&timezone=auto&models=icon_eu`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const now = new Date();
+    const currentHourStr = now.toISOString().slice(0, 13); // Format: "YYYY-MM-DDTHH"
+	//const currentHourStr = "2026-11-01T23";
+    let totalRain = 0;
+
+    // Iterujemy po godzinach z doby i sumujemy opady do obecnej godziny inclusive
+    for (let i = 0; i < data.hourly.time.length; i++) {
+      const timeStr = data.hourly.time[i]; // Format: "YYYY-MM-DDTHH:00"
+      
+      if (timeStr <= currentHourStr) {
+        // Jeśli wpis należy do dzisiejszego dnia
+        if (timeStr.startsWith(currentHourStr.slice(0, 10))) {
+          totalRain += data.hourly.precipitation[i];
+        }
+      } else {
+        break; // Nie sumujemy przyszłych godzin
+      }
+    }
+	//document.getElementById('rain-value').innerText = "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
+    document.getElementById('rain-value').innerText += totalRain.toFixed(1);
+  } catch (error) {
+    console.error('Błąd pobierania danych o opadach:', error);
+    document.getElementById('rain-value').innerText += 'błąd';
+  }
+}
+
+// Wywołaj przy załadowaniu strony
+getTodayRainfall();
 </script>
 </BODY>
 </HTML>
