@@ -69,8 +69,22 @@
 	background-position: 50%;
 }
 
+#rain-box{
+	padding: 12px; 
+	margin: 10px;
+	border: 1px solid #ccc; 
+	border-radius: 8px; 
+	width: fit-content; 
+	font-family: sans-serif;
+}
+
 #imagesStatic{
 	margin: 20px;
+}
+
+#imagesWx img{
+	display: block;
+	margin: 10px;
 }
 
 #tabela-wx {
@@ -79,12 +93,6 @@
   width: fit-content;
   gap: 10px;
 }
-
-/*
-.wiersz > *:first-child{
-	grid-column-start: 1;
-}
-*/
 
 .wiersz > .komorka:first-child,
 .wiersz > .komorka-title:first-child
@@ -175,25 +183,16 @@
 </div>
 --!>
 <div id="modelinfo"></div>
-<div id="tabela-wx">
-  <div class="wiersz">
-    <div class="komorka-title">Polska</div>
-	<div class="komorka" id="k1"></div>
-    <div class="komorka" id="k2"></div>
-	<div class="komorka" id="k3"></div>
-  </div>
-  <div class="wiersz">
-	<div class="komorka-title">Europa</div>
-    <div class="komorka" id="k4"></div>
-    <div class="komorka" id="k5"></div>
-	<div class="komorka" id="k6"></div>
-  </div>
-</div>
-<br>
 <div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
   <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm <span id="rain-time" style="font-size: 12px;"></span>
 </div>
-<div id="images"></div>
+<div id="imagesWx">
+	<img id="wx1" />
+	<img id="wx2" />
+	<img id="wx3" />
+	<img id="wx4" />
+	<img id="wx5" />
+</div>
 <div id="imagesStatic">
 <img src="https://www.yr.no/en/content/54.474,%2018.482/meteogram.svg"/>
 <img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
@@ -248,25 +247,6 @@ var str_forecast = d.toISOString().replace(/\.\d{3}Z$/, 'Z');
 
 var tabWxElem = document.getElementById("modelinfo");
 tabWxElem.innerHTML += "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
-document.getElementById("k1").innerHTML += "obecnie opady/chmury";
-//document.getElementById("k1").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast); };
-document.getElementById("k1").onclick = function(){ showWxImage("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast);
-	
-document.getElementById("k2").innerHTML += "obecnie ciśnienie/wiatr";
-document.getElementById("k2").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast); };
-
-document.getElementById("k3").innerHTML += "obecnie temperatura";
-document.getElementById("k3").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/2m_ttG-C/" + str_runForecast + "/" + str_forecast); };
-
-document.getElementById("k4").innerHTML += "obecnie opady/chmury";
-document.getElementById("k4").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/overview/" + str_runForecast + "/" + str_forecast); };
-
-document.getElementById("k5").innerHTML += "obecnie ciśnienie/wiatr";
-document.getElementById("k5").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/mslp/" + str_runForecast + "/" + str_forecast); };
-
-document.getElementById("k6").innerHTML += "obecnie temperatura";
-document.getElementById("k6").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/europe/2m_ttG-C/" + str_runForecast + "/" + str_forecast); };
-
 
 
 async function getTodayRainfall() {
@@ -299,7 +279,7 @@ async function getTodayRainfall() {
       }
     }
 	//document.getElementById('rain-value').innerText = "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
-    document.getElementById("rain-time").innerHTML = "<br>stan na godzinę: "+now.getHours()+":00<br>miasto: Gdynia";
+    document.getElementById("rain-time").innerHTML = "<br>stan na godzinę: "+now.getHours()+":00 CET<br>miasto: Gdynia";
 	document.getElementById('rain-value').innerText = totalRain.toFixed(1);
   } catch (error) {
     console.error('Błąd pobierania danych o opadach:', error);
@@ -307,12 +287,12 @@ async function getTodayRainfall() {
   }
 }
 
-function showWxImage(imgUrl) {
+function showWxImage(imgUrl, id) {
   // Wklej tutaj swój skopiowany adres Workera z Cloudflare:
-  var workerProxyUrl = "https://twoja-nazwa-workera.twojanazwa.workers.dev/?url=" + encodeURIComponent(imgUrl);
+  var workerProxyUrl = "https://wxcharts-proxy.dabomic.workers.dev/?url=" + encodeURIComponent(imgUrl);
   
-  var imgDiv = document.getElementById("images");
-  imgDiv.innerHTML = "Ładowanie mapy...";
+  var imgDiv = document.getElementById("imagesWx");
+  //imgDiv.innerHTML = "Ładowanie mapy...";
 
   fetch(workerProxyUrl)
     .then(response => {
@@ -322,22 +302,33 @@ function showWxImage(imgUrl) {
     .then(imageBlob => {
       var objectURL = URL.createObjectURL(imageBlob);
       
-      imgDiv.innerHTML = ""; // Czyszczenie napisu ładowania
+      //imgDiv.innerHTML = ""; // Czyszczenie napisu ładowania
       
-      var imgElem = document.createElement("img");
+      //var imgElem = document.createElement("img");
+	  imgElem = document.getElementById(id);
       imgElem.src = objectURL;
-      imgElem.style.maxWidth = "100%"; // Skalowanie obrazka
-      
+      imgElem.style.maxWidth = "800px"; // Skalowanie obrazka
+      imgElem.onclick = function(){ openLink(imgUrl); };
       imgDiv.appendChild(imgElem);
     })
     .catch(err => {
       console.error("Błąd:", err);
       imgDiv.innerText = "Nie udało się pobrać mapy.";
     });
+};
+
+function loadWxImages(){
+	showWxImage("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast, "wx1");
+	showWxImage("https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast, "wx2");
+	showWxImage("https://www.wxcharts.com/api/content/icon-eu/europe/overview/" + str_runForecast + "/" + str_forecast, "wx3");
+	showWxImage("https://www.wxcharts.com/api/content/icon-eu/europe/mslp/" + str_runForecast + "/" + str_forecast, "wx4");
+	showWxImage("https://www.wxcharts.com/api/content/icon-eu/poland/2m_ttG-C/" + str_runForecast + "/" + str_forecast, "wx5");
 }
 
 // Wywołaj przy załadowaniu strony
+loadWxImages();
 getTodayRainfall();
+
 </script>
 </BODY>
 </HTML>
