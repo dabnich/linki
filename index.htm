@@ -75,6 +75,7 @@
 	border: 1px solid #ccc; 
 	border-radius: 8px; 
 	width: fit-content; 
+	height: fit-content;
 	font-family: sans-serif;
 }
 
@@ -182,10 +183,28 @@
 </div>
 </div>
 --!>
-<div id="modelinfo"></div>
-<div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
-  <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm <span id="rain-time" style="font-size: 12px;"></span>
+
+<div style="display: grid; grid-template-columns: max-content 1fr; gap: 10px; grid-template-rows: auto 1fr;">
+  
+  <!-- Pierwsza kolumna - wiersz 1 -->
+	<div id="modelinfo"></div>
+
+  <!-- Druga kolumna - zajmuje oba wiersze w pionie -->
+	<div style="grid-row: span 2;">
+		<img src="https://www.yr.no/en/content/54.474,%2018.482/meteogram.svg"/>
+	</div>
+	<div id="rain-box">
+		<strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm <span id="rain-time" style="font-size: 12px;"></span>
+	</div>
+
+  <!-- Pierwsza kolumna - wiersz 2 -->
+
+
 </div>
+
+
+
+
 <div id="imagesWx">
 	<img id="wx1" />
 	<img id="wx2" />
@@ -194,7 +213,7 @@
 	<img id="wx5" />
 </div>
 <div id="imagesStatic">
-<img src="https://www.yr.no/en/content/54.474,%2018.482/meteogram.svg"/>
+
 <img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
 <!--
 <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
