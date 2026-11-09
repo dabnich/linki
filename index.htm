@@ -69,7 +69,7 @@
 	background-position: 50%;
 }
 
-#images{
+#imagesStatic{
 	margin: 20px;
 }
 
@@ -193,14 +193,15 @@
 <div id="rain-box" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: fit-content; font-family: sans-serif;">
   <strong>Suma opadów dzisiaj:</strong> <span id="rain-value">Pobieranie...</span> mm <span id="rain-time" style="font-size: 12px;"></span>
 </div>
-<div id="images">
+<div id="images"></div>
+<div id="imagesStatic">
 <img src="https://www.yr.no/en/content/54.474,%2018.482/meteogram.svg"/>
 <img src="https://img.allmetsat.com/sat/msg_fes-polska-ir039.jpg"/>
 <!--
 <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/en-GB/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
 -->
-
 </div>
+
 
 <script>
 function openLink(adres){
@@ -248,8 +249,9 @@ var str_forecast = d.toISOString().replace(/\.\d{3}Z$/, 'Z');
 var tabWxElem = document.getElementById("modelinfo");
 tabWxElem.innerHTML += "przebieg modelu: "+str_runForecast+"<br>godzina prognozy: "+str_forecast;
 document.getElementById("k1").innerHTML += "obecnie opady/chmury";
-document.getElementById("k1").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast); };
-
+//document.getElementById("k1").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast); };
+document.getElementById("k1").onclick = function(){ showWxImage("https://www.wxcharts.com/api/content/icon-eu/poland/overview/" + str_runForecast + "/" + str_forecast);
+	
 document.getElementById("k2").innerHTML += "obecnie ciśnienie/wiatr";
 document.getElementById("k2").onclick = function(){ openLink("https://www.wxcharts.com/api/content/icon-eu/poland/mslp/" + str_runForecast + "/" + str_forecast); };
 
@@ -303,6 +305,35 @@ async function getTodayRainfall() {
     console.error('Błąd pobierania danych o opadach:', error);
     document.getElementById('rain-value').innerText += 'błąd';
   }
+}
+
+function showWxImage(imgUrl) {
+  // Wklej tutaj swój skopiowany adres Workera z Cloudflare:
+  var workerProxyUrl = "https://twoja-nazwa-workera.twojanazwa.workers.dev/?url=" + encodeURIComponent(imgUrl);
+  
+  var imgDiv = document.getElementById("images");
+  imgDiv.innerHTML = "Ładowanie mapy...";
+
+  fetch(workerProxyUrl)
+    .then(response => {
+      if (!response.ok) throw new Error("Błąd sieciowy z Workera");
+      return response.blob();
+    })
+    .then(imageBlob => {
+      var objectURL = URL.createObjectURL(imageBlob);
+      
+      imgDiv.innerHTML = ""; // Czyszczenie napisu ładowania
+      
+      var imgElem = document.createElement("img");
+      imgElem.src = objectURL;
+      imgElem.style.maxWidth = "100%"; // Skalowanie obrazka
+      
+      imgDiv.appendChild(imgElem);
+    })
+    .catch(err => {
+      console.error("Błąd:", err);
+      imgDiv.innerText = "Nie udało się pobrać mapy.";
+    });
 }
 
 // Wywołaj przy załadowaniu strony
