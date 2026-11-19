@@ -311,6 +311,7 @@ async function getTodayRainfall() {
 
 function showWxImage(imgUrl, id) {
   // Wklej tutaj swój skopiowany adres Workera z Cloudflare:
+  console.log("adres obrazka: "+imgUrl);
   var workerProxyUrl = "https://wxcharts-proxy.dabomic.workers.dev/?url=" + encodeURIComponent(imgUrl);
   
   var imgDiv = document.getElementById("imagesWx");
