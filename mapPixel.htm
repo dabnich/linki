@@ -1,0 +1,179 @@
+<HTML>
+<HEAD></HEAD>
+<BODY>
+<SCRIPT>
+const DEG2RAD = Math.PI / 180;
+// Standardowy promień sfery używany w PROJ dla +ellps=sphere (często też 6371000)
+const SPHERE_RADIUS = 6370997.0;
+
+/**
+ * Rzut Azimuthal Equidistant (aeqd) na sferze -> metry (Easting, Northing) względem (lat0, lon0)
+ */
+function latLonToAeqdMeters(latDeg, lonDeg, lat0Deg, lon0Deg, radius = SPHERE_RADIUS) {
+  const lat = latDeg * DEG2RAD;
+  const lon = lonDeg * DEG2RAD;
+  const lat0 = lat0Deg * DEG2RAD;
+  const lon0 = lon0Deg * DEG2RAD;
+  const dLon = lon - lon0;
+
+  const sinLat0 = Math.sin(lat0);
+  const cosLat0 = Math.cos(lat0);
+  const sinLat = Math.sin(lat);
+  const cosLat = Math.cos(lat);
+  const cosDLon = Math.cos(dLon);
+
+  // Kąt centralny c na sferze
+  const cosC = Math.max(-1, Math.min(1, sinLat0 * sinLat + cosLat0 * cosLat * cosDLon));
+  const c = Math.acos(cosC);
+
+  // Dla punktu bardzo bliskiego środkowi rzutowania k -> 1
+  const k = c < 1e-10 ? 1 : c / Math.sin(c);
+
+  const easting = radius * k * cosLat * Math.sin(dLon);
+  const northing = radius * k * (cosLat0 * sinLat - sinLat0 * cosLat * cosDLon);
+
+  return { easting, northing };
+}
+
+/**
+ * Tworzy funkcję przeliczającą (lat, lon) -> { x, y } dla konkretnego opisu <projection>
+ */
+function createAeqdPixelMapper(proj) {
+  const {
+    lat_ul,
+    lon_ul,
+    lat_lr,
+    lon_lr,
+    lat_0,
+    lon_0,
+    size_x,
+    size_y,
+    radius = SPHERE_RADIUS
+  } = proj;
+
+  const ul = latLonToAeqdMeters(lat_ul, lon_ul, lat_0, lon_0, radius);
+  const lr = latLonToAeqdMeters(lat_lr, lon_lr, lat_0, lon_0, radius);
+
+  return function latLonToPixel(latDeg, lonDeg) {
+    const pt = latLonToAeqdMeters(latDeg, lonDeg, lat_0, lon_0, radius);
+
+    // Oś X rośnie w prawo (od lon_ul do lon_lr)
+    const x = ((pt.easting - ul.easting) / (lr.easting - ul.easting)) * size_x;
+
+    // Oś Y na obrazku rośnie w dół, natomiast northing rośnie w górę
+    const y = ((ul.northing - pt.northing) / (ul.northing - lr.northing)) * size_y;
+
+    return { x, y };
+  };
+}
+
+// --- Przykład użycia z Twoimi danymi ---
+const projectionConfig = {
+  lat_ul: 56.186500,
+  lon_ul: 11.812900,
+  lat_lr: 48.133400,
+  lon_lr: 25.157600,
+  lat_0: 52.346800,
+  lon_0: 19.092600,
+  size_x: 900,
+  size_y: 900
+};
+
+const toPixel = createAeqdPixelMapper(projectionConfig);
+
+/**
+ * Ładuje obrazek PNG i zwraca funkcję pobierającą kolor piksela (x, y).
+ * Uwaga: jeśli obrazek pochodzi z innej domeny, serwer musi wysyłać nagłówek CORS (Access-Control-Allow-Origin).
+ */
+ 
+ 
+async function createPngPixelReader(imageUrl) {
+  const img = new Image();
+  img.crossOrigin = "anonymous"; // wymagane przy obrazkach z zewnętrznych URL-i z CORS
+
+  await new Promise((resolve, reject) => {
+    img.onload = resolve;
+    img.onerror = () => reject(new Error(`Nie udało się wczytać obrazka: ${imageUrl}`));
+    img.src = imageUrl;
+  });
+
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+
+  return function getPixelRGB(x, y) {
+    // Zaokrąglamy do całkowitych indeksów pikseli (np. z wyniku funkcji mapującej x, y)
+    const px = Math.floor(x);
+    const py = Math.floor(y);
+
+    if (px < 0 || py < 0 || px >= canvas.width || py >= canvas.height) {
+      return null; // poza zakresem obrazka
+    }
+
+    const [r, g, b, a] = ctx.getImageData(px, py, 1, 1).data;
+    return { r, g, b, a };
+  };
+}
+
+async function createPngPixelReaderFromFile(file) {
+  const objectUrl = URL.createObjectURL(file);
+
+  try {
+    const img = new Image();
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error(`Nie udało się wczytać pliku: ${file.name}`));
+      img.src = objectUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+
+    return function getPixelRGB(x, y) {
+      const px = Math.floor(x);
+      const py = Math.floor(y);
+      if (px < 0 || py < 0 || px >= canvas.width || py >= canvas.height) {
+        return null;
+      }
+      const [r, g, b, a] = ctx.getImageData(px, py, 1, 1).data;
+      return { r, g, b, a };
+    };
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+var scaleColors = [];
+
+// --- Przykład użycia ---
+(async () => {
+  const getPixel = await createPngPixelReader("2026112216250000dBZ.cappi.png");
+  const { x, y } = toPixel(54.63378494577148, 18.549705219979867); // np. z poprzedniej funkcji
+  const color = getPixel(x, y);
+  var diff=25;
+  for(var i=0; i<22; i++){
+    scaleColors.push(getPixel(950, 87+i*25));
+  }
+  console.log(scaleColors);
+  for(var i=0; i<scaleColors.length; i++){
+    if(color==scaleColors[i]) console.log("znaleziono: "+scaleColors[i]);
+  }
+})();
+//95,121
+//21
+//87, 609
+//start od 87px, jeden klocek 25px, 21 klockow
+// Test: środek rzutu (lat_0, lon_0) oraz narożniki
+console.log("test Odra-Bóbr:", toPixel(52.05106929952267, 15.072144276415434));
+console.log("Lewy górny (0, 0):", toPixel(56.186500, 11.812900));
+console.log("Prawy dolny (900, 900):", toPixel(48.133400, 25.157600));
+</SCRIPT>
+</BODY>
+</HTML>
