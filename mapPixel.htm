@@ -163,7 +163,9 @@ var scaleColors = [];
   }
   console.table(scaleColors);
   for(var i=0; i<scaleColors.length; i++){
-    if(color==scaleColors[i]) console.log("znaleziono: "+scaleColors[i]);
+    if(color["r"]==scaleColors[i]["r"] && color["g"]==scaleColors[i]["g"] && color["b"]==scaleColors[i]["b"]){
+      console.log("znaleziono: " + scaleColors[i]["r"] + "," + scaleColors[i]["g"] + "," + scaleColors[i]["b"]);
+    }
   }
   console.log("-----------");
   console.table(color);
