@@ -161,11 +161,12 @@ var scaleColors = [];
   for(var i=0; i<22; i++){
     scaleColors.push(getPixel(950, 87+i*25));
   }
-  console.log(scaleColors);
+  console.table(scaleColors);
   for(var i=0; i<scaleColors.length; i++){
     if(color==scaleColors[i]) console.log("znaleziono: "+scaleColors[i]);
   }
-  console.log("kolor to: "+color);
+  console.log("-----------");
+  console.table(color);
 })();
 //95,121
 //21
